@@ -1,0 +1,439 @@
+openapi: 3.0.2
+tags:
+  - name: Device Management
+    description: Search for the device details
+  - name: Device Configuration
+    description: Configure the devices for sale
+  - name: SIM Management  
+    description: Configure SIM
+info:
+  version: '1.0'
+  title: Warehouse Management API
+  description: Provides Specification for Warehouse operations
+  contact:
+    name: API Support
+    email: shanto.joseph@outlook.com
+servers:
+  - url: 'http://localhost:8080/warehouse'
+paths:
+  /devices:
+    get:
+      tags:
+        - Device Management
+      summary: Search for the devices ready for activation
+      description: List the devices which are ready for activation
+      operationId: getDevices
+      parameters:
+        - in: header
+          name: Correlation-ID
+          description: Unique id to track the api request
+          schema:
+            $ref: '#/components/schemas/correlationId'
+          required: true
+        - in: query
+          name: status
+          description: status for the sim
+          schema:
+            $ref: '#/components/schemas/simStatus'
+      responses:
+        '200':
+          description: Device search successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '500':
+          description: Error while searching for devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Device Management
+      summary: add new device in the system
+      description: add new device in the system 
+      operationId: addDevice
+      parameters:
+        - in: header
+          name: Correlation-ID
+          description: Unique id to track the api request
+          schema:
+            $ref: '#/components/schemas/correlationId'
+          required: true
+      requestBody:
+        content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/DeviceRequest' 
+      responses:
+        '200':
+          description: Device search successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '500':
+          description: Error while searching for devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'  
+    put :
+      tags:
+        - Device Management
+      summary: Update the device in the system
+      description: Update the  device in the system 
+      operationId: updateDevice
+      parameters:
+        - in: header
+          name: Correlation-ID
+          description: Unique id to track the api request
+          schema:
+            $ref: '#/components/schemas/correlationId'
+          required: true
+      requestBody:
+        content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/DeviceRequest' 
+      responses:
+        '200':
+          description: Device search successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '500':
+          description: Error while searching for devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'              
+  /sim:          
+   post:
+      tags:
+        - SIM Management 
+      summary: add new SIM in the system
+      description: add new SIM in the system 
+      operationId: addSim
+      parameters:
+        - in: header
+          name: Correlation-ID
+          description: Unique id to track the api request
+          schema:
+            $ref: '#/components/schemas/correlationId'
+          required: true
+      requestBody:
+        content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/SimRequest' 
+      responses:
+        '200':
+          description: Device search successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '500':
+          description: Error while searching for devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'  
+   put:
+      tags:
+        - SIM Management 
+      summary: add new SIM in the system
+      description: add new SIM in the system 
+      operationId: updateSim
+      parameters:
+        - in: header
+          name: Correlation-ID
+          description: Unique id to track the api request
+          schema:
+            $ref: '#/components/schemas/correlationId'
+          required: true
+      requestBody:
+        content:
+            application/json:
+              schema:
+               $ref: '#/components/schemas/SimRequest' 
+      responses:
+        '200':
+          description: Device search successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Success'
+        '500':
+          description: Error while searching for devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'               
+  /devices/{status}:
+    get:
+      tags:
+        - Device Management
+      summary: Search for the devices by status
+      description: Search for the devices based on device status
+      operationId: getReadyForSaleDevices
+      parameters:
+        - in: header
+          name: Correlation-ID
+          description: Unique id to track the api request
+          schema:
+            $ref: '#/components/schemas/correlationId'
+          required: true
+        - in: path 
+          name: status
+          required: true
+          description: Status of the device
+          schema:
+            type: string
+            minLength: 4
+            maxLength: 30
+            example: READY
+            description: READY/WAITING  
+      responses:
+        '200':
+          description: Device search successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '500':
+          description: Error while searching for devices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /devices/load:
+   post:
+    tags:
+      - Device Configuration
+    summary: Initial load of the device deatils to the system
+    description: Loads data from data dump files located om server 
+    operationId: load
+    parameters:
+      - in: header
+        name: Correlation-ID
+        description: Unique id to track the api request
+        schema:
+          $ref: '#/components/schemas/correlationId'
+        required: true
+    responses:
+      '200':
+        description: Data Load successful
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Success'
+      '500':
+        description: Error while loading the device and related info to DB
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error'              
+  /devices/configure :
+   post:
+    tags:
+      - Device Configuration
+    summary: Configure device for sale
+    description: Map the device to sim and make the device status to ready 
+    operationId: configure
+    parameters:
+      - in: header
+        name: Correlation-ID
+        description: Unique id to track the api request
+        schema:
+          $ref: '#/components/schemas/correlationId'
+        required: true
+    requestBody:
+      content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceConfigurationRequest'    
+    responses:
+      '200':
+        description: Data Load successful
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Success'
+      '500':
+        description: Error info details
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Error' 
+components:
+  schemas:
+    correlationId:
+      type: string
+      format: uuid
+      example: 123e4567-e89b-12d3-a456-426614174000
+    simStatus:
+      type: string
+      minLength: 10
+      maxLength: 30
+      example: WAITING_FOR_ACTIVATION
+      description: status of sim ACTIVE/WAITING_FOR_ACTIVATION/BLOCKED/DEACTIVATED
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: unique is for the device
+        status:
+          type: string
+          minLength: 7
+          maxLength: 10
+          example: READY
+          description: Device configuration status
+        temperature:
+          type: string
+          minLength: 1
+          maxLength: 4
+          example: 10
+          description: Device temperature
+        createdBy:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: Admin
+          description: Who added the device to the system
+        createdDate:
+          type: string
+          minLength: 10
+          maxLength: 10
+          example: 21-07-2021
+          description: Date when the device to the system
+    DeviceRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: unique is for the device
+        status:
+          type: string
+          minLength: 7
+          maxLength: 10
+          example: READY
+          description: Device configuration status
+        temperature:
+          type: string
+          minLength: 1
+          maxLength: 4
+          example: 10
+          description: Device temperature
+        userId:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: Admin
+          description: Who added the device to the system
+    DeviceConfigurationRequest:
+      type: object
+      properties:
+       deviceId:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: unique is for the device
+       simId:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: unique is for the device    
+       status:
+          type: string
+          minLength: 7
+          maxLength: 10
+          example: READY
+          description: Device configuration status
+       userId:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: Admin
+          description: Who added the device to the system  
+    SimRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: 123e4567-e89b-12d3-a456-426614174000
+          description: unique is for the device
+        operatorCode: 
+          type: string
+          minLength: 7
+          maxLength: 10
+          example: VI
+          description: Device configuration status  
+        country:
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: GBR
+          description: ISO country code
+        status:
+          type: string
+          minLength: 7
+          maxLength: 10
+          example: ACTIVE
+          description: Sim configuration status
+        userId:
+          type: string
+          minLength: 3
+          maxLength: 100
+          example: Admin
+          description: Who added the device to the system
+    Error:
+      type: object
+      properties:
+        reasonCode:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: BAD_REQUEST
+          description: response code for error
+        status:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: description
+          description: details for error
+        recoverable:
+          type: boolean
+          minLength: 1
+          maxLength: 4
+          example: false
+          description: Device temperature
+    Success:
+      type: object
+      properties:
+        responseCode:
+          type: string
+          minLength: 36
+          maxLength: 36
+          example: null
+          description: response code for action
+        description:
+          type: string
+          minLength: 1
+          maxLength: 100
+          example: Successful
+          description: Successful
