@@ -2,6 +2,7 @@
 warehouse-service-demo
 
 A shop in London has 2 million IoT tracking devices in the warehouse for sale, of which half needs configured to meet UK standards. A configured device will have a status "READY" and an ideal temperature between (-25'C to 85'C).
+
 The configuration process requires a given IoT device to be associated with a SIM (Subscriber Identification Module) card. The SIM card holds information such as:
 •    SIM ID - uniquely identify the SIM card.
 •    Operator code – uniquely identify a mobile operator
@@ -9,6 +10,8 @@ The configuration process requires a given IoT device to be associated with a SI
 •    Status – devices status can be Active, waiting for activation, Blocked or Deactivated.
  
 The shop can sell a device only if it meets the UK government's industry standard.
+
+
 
 Task:
 Using the Java programming language, develop a REST API that 
